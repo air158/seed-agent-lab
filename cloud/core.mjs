@@ -30,6 +30,12 @@ export class HeartbeatRuntime {
     await this.ready;
     const age = this.state.last_tick_ms === null ? null : Math.max(0, this.now() - this.state.last_tick_ms);
     return { ...structuredClone(this.state), interval_ms: INTERVAL_MS,
+      runtime_diagnostics: {
+        alarm_active: this.running,
+        batch_started_at_ms: this.batchStartedAt ?? null,
+        batch_finished_at_ms: this.batchFinishedAt ?? null,
+        scheduled_alarm_ms: await this.getAlarm(),
+      },
       heartbeat_age_ms: age,
       healthy: this.state.enabled && this.state.status === 'running' && age !== null && age < 3000,
       observed_at_ms: this.now(),
@@ -98,6 +104,7 @@ export class HeartbeatRuntime {
     }
     this.running = true;
     try {
+      this.batchStartedAt = this.now();
       const end = this.now() + this.batchMs;
       // This durable alarm remains scheduled if a host restart interrupts a
       // batch. The minute cron is an additional recovery and owner-control check.
@@ -126,6 +133,7 @@ export class HeartbeatRuntime {
         next = this.state.next_tick_ms;
       }
       if (this.state.enabled) await this.setAlarm(this.state.next_tick_ms || this.now() + INTERVAL_MS);
+      this.batchFinishedAt = this.now();
     } finally {
       this.running = false;
     }
