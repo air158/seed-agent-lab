@@ -41,7 +41,7 @@ Each simulated task has value, arrival time, a deadline and effort. A policy ran
 
 ## One-second heartbeat
 
-The [cloud runtime](cloud/README.md) is deployed as one Cloudflare Durable Object on the verified $0 Workers Free plan. It persists real one-second timer executions, keeps the latest 120 timestamps, and checks the owner's stop switch every minute. [Live execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) reports stale beats and platform interruptions honestly. An [independent hourly observer](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml) measures 90 seconds without polling. Deployment is complete; sustained and post-chat operation must be judged from those measurements.
+The [cloud runtime](cloud/README.md) is deployed as one Cloudflare Durable Object on the verified $0 Workers Free plan. It persists real one-second timer executions, keeps the latest 120 timestamps, and checks the owner's stop switch every minute. [Live execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) reports stale beats and platform interruptions honestly. An [independent hourly observer](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml) measures 90 seconds without polling. **The first cloud observation passed: 90 persisted beats during a 90-second quiet interval, with a 1,000 ms p95 and maximum interval.** See the [timestamped verification record](verification/README.md). Post-chat continuity awaits the scheduled follow-up.
 
 The optional live runner writes a real process-liveness checkpoint every second while it is running:
 
