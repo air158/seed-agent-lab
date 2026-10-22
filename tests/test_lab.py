@@ -1,6 +1,7 @@
 from dataclasses import asdict
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -8,6 +9,7 @@ from unittest.mock import patch
 
 from seedlab.core import Policy, evaluate, parse_model_output, select, simulate
 from seedlab.run import atomic_write, cycle, exclusive, initial_state, load_state, read_control
+from seedlab.publish import publish
 
 ROOT = Path(__file__).resolve().parents[1]
 NOW = datetime(2026, 10, 23, 0, 0, tzinfo=timezone.utc).timestamp()
@@ -137,6 +139,26 @@ class RuntimeTests(unittest.TestCase):
             state = cycle(self.root, True, NOW)
         self.assertEqual(state["status"], "paused")
         self.assertEqual(state["generation"], 0)
+
+
+class PublisherTests(unittest.TestCase):
+    def test_stale_checkout_does_not_overwrite_newer_state(self):
+        from io import BytesIO
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": "owner/repo", "GITHUB_TOKEN": "test-only",
+                                    "GITHUB_SHA": "old-event", "GITHUB_REF_NAME": "main",
+                                    "SEED_CHECKOUT_SHA": "checked-out"}):
+            with patch("urllib.request.urlopen", return_value=BytesIO(b'{"object":{"sha":"newer-head"}}')) as network:
+                with self.assertRaisesRegex(RuntimeError, "Branch changed"):
+                    publish()
+                self.assertEqual(network.call_count, 1)
+
+    def test_missing_checkout_lease_fails_closed(self):
+        with patch.dict(os.environ, {"GITHUB_REPOSITORY": "owner/repo", "GITHUB_TOKEN": "test-only",
+                                    "GITHUB_SHA": "stale-event", "GITHUB_REF_NAME": "main"}, clear=True):
+            with patch("urllib.request.urlopen") as network:
+                with self.assertRaises(KeyError):
+                    publish()
+                network.assert_not_called()
 
 
 if __name__ == "__main__":

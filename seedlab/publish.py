@@ -11,7 +11,8 @@ ALLOWED = ("state/current.json", "state/previous.json", "REPORT.md")
 def publish() -> None:
     repo = os.environ["GITHUB_REPOSITORY"]
     token = os.environ["GITHUB_TOKEN"]
-    expected = os.environ["GITHUB_SHA"]
+    # Event SHA can be stale after queued runs; use the actual checkout's lease.
+    expected = os.environ["SEED_CHECKOUT_SHA"]
     branch = os.environ["GITHUB_REF_NAME"]
     root = Path(__file__).resolve().parents[1]
 

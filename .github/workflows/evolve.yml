@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Queued/retried events must read the latest ledger, not the old event SHA.
+          ref: main
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -43,10 +45,13 @@ jobs:
         id: plan
         run: |
           python - <<'PY'
-          import os, time
+          import os, time, subprocess
           from datetime import datetime, timezone
           from seedlab.run import ROOT, load_state, read_control
           control = read_control(ROOT)
+          checked_out_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write('SEED_CHECKOUT_SHA=' + checked_out_sha + '\n')
           state, recovered = load_state(ROOT / 'state')
           today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
           same_day = state['day'] == today
