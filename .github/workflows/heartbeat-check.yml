@@ -1,0 +1,34 @@
+name: Cloud heartbeat observation
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  observe:
+    if: github.event.repository.private == false && vars.CLOUD_HEARTBEAT_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Observe 90 seconds without polling
+        env:
+          HEARTBEAT_URL: ${{ vars.CLOUD_HEARTBEAT_URL }}
+        run: python cloud/verify.py "$HEARTBEAT_URL" --output heartbeat-verification.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: heartbeat-observation-${{ github.run_id }}
+          path: heartbeat-verification.json
+          if-no-files-found: warn
+          retention-days: 7

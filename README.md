@@ -13,7 +13,7 @@ A small, AI-assisted experiment in improving a task-scheduling policy under a fi
 | Public source and feedback | This repository and issue #1 |
 | Scheduled cloud experiments | One verified successful GitHub Actions run; scheduled every 6 hours |
 | Model proposal | One successful Qwen CPU proposal, evaluated and saved |
-| One-second heartbeat | Available in the local/server runner; not deployed as a continuous cloud service |
+| One-second heartbeat | Local/server runner tested; [cloud runtime](cloud/README.md) prepared but not deployed |
 | General or real-world improvement | Not established |
 
 The [first verified cloud run](https://github.com/air158/seed-agent-lab/actions/runs/39817612386) increased fixed synthetic training value from **686.10 to 699.65 (+1.97%)**. This is one toy-benchmark result, not proof of sustained improvement or an advantage over random search. See [REPORT.md](REPORT.md) for the current checkpoint.
@@ -40,6 +40,8 @@ Each simulated task has value, arrival time, a deadline and effort. A policy ran
 - Stronger baselines, distribution shifts and an untouched final test set are still needed.
 
 ## One-second heartbeat
+
+The [cloud runtime and independent observer](cloud/README.md) are prepared for a single free Cloudflare Durable Object. Deployment is pending authentication; no continuous cloud uptime is claimed yet.
 
 The optional live runner writes a real process-liveness checkpoint every second while it is running:
 

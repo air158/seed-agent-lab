@@ -7,6 +7,7 @@ on:
     paths:
       - 'seedlab/**'
       - 'tests/**'
+      - 'cloud/**'
       - '.github/workflows/tests.yml'
 
 permissions:
@@ -25,3 +26,25 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s tests -v
+  cloud-runtime:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: cloud
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: cloud/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+      - run: npm run test:runtime

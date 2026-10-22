@@ -4,3 +4,7 @@ __pycache__/
 .cache/
 *.tmp
 work/
+cloud/node_modules/
+cloud/dist/
+cloud/.wrangler/
+heartbeat-verification.json
