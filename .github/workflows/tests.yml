@@ -1,0 +1,27 @@
+name: Seed Lab tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - 'seedlab/**'
+      - 'tests/**'
+      - '.github/workflows/tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
