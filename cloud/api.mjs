@@ -1,5 +1,5 @@
 import { json, HttpError, requireOrigin, readJson, validText, WorkspaceStore } from './workspace.mjs';
-import { startChat } from './chat.mjs';
+import { startChat, isMomo, FREE_MODEL } from './chat.mjs';
 
 export { WorkspaceStore };
 export async function workspaceApi(request, store, context) {
@@ -10,7 +10,7 @@ export async function workspaceApi(request, store, context) {
     if (path === '/api/login' && method === 'POST') return await store.login(await readJson(request, 1000));
     if (!await store.authenticate(request)) throw new HttpError(401, '请先登录工作区。');
     if (path === '/api/logout' && method === 'POST') return await store.logout(request);
-    if (path === '/api/config' && method === 'GET') return json({ provider: 'MomoAI', model: store.env.MOMOAI_MODEL || 'momo_278', instructions: store.meta('instructions'), usage: store.daily(), maxChats: 200, maxTurns: 60 });
+    if (path === '/api/config' && method === 'GET') return json({ provider: isMomo(store.env) ? 'MomoAI' : 'Cloudflare Workers AI', model: isMomo(store.env) ? store.env.MOMOAI_MODEL || 'momo_278' : FREE_MODEL, free: !isMomo(store.env), label: isMomo(store.env) ? 'MomoAI' : '免费模型', instructions: store.meta('instructions'), usage: store.daily(), maxChats: 200, maxTurns: 60 });
     if (path === '/api/config' && method === 'PATCH') { const body = await readJson(request, 10000); store.setMeta('instructions', validText(body.instructions ?? '', 3000, true)); return json({ ok: true }); }
     if (path === '/api/chats' && method === 'GET') return json({ chats: store.listChats((url.searchParams.get('q') || '').slice(0, 200)) });
     if (path === '/api/chats' && method === 'POST') { await readJson(request, 1000); return json(store.createChat(), 201); }

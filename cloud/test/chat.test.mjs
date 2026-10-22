@@ -20,7 +20,7 @@ test('rejects cross-origin mutation, unsupported images, and oversized bodies', 
 });
 test('real tool loop uses fixed provider, returns result, and enforces per-round quota', async () => {
   const events = [], requests = []; let reservations = 0;
-  const store = { env: { MOMOAI_API_KEY: 'test-secret' }, reserveCall() { reservations++; }, tasks() { return [{ title: '测试任务', status: 'todo' }]; } };
+  const store = { env: { CHAT_PROVIDER: 'momoai', MOMOAI_API_KEY: 'test-secret' }, reserveCall() { reservations++; }, tasks() { return [{ title: '测试任务', status: 'todo' }]; } };
   const result = await runModel({ store, messages: [{ role: 'user', content: '我的任务' }], signal: new AbortController().signal, context: {}, emit: (event, data) => events.push({ event, data }), fetcher: async (url, options) => {
     assert.equal(url, 'https://www.momoai.pro/v1/responses'); assert.equal(options.redirect, 'manual');
     const body = JSON.parse(options.body); requests.push(body);
@@ -33,7 +33,7 @@ test('real tool loop uses fixed provider, returns result, and enforces per-round
   assert.ok(!JSON.stringify(events).includes('test-secret'));
 });
 test('upstream error bodies never reach browser and truncated streams are not complete', async () => {
-  const args = { store: { env: { MOMOAI_API_KEY: 'secret' }, reserveCall() {} }, messages: [], emit() {}, signal: new AbortController().signal, context: {} };
+  const args = { store: { env: { CHAT_PROVIDER: 'momoai', MOMOAI_API_KEY: 'secret' }, reserveCall() {} }, messages: [], emit() {}, signal: new AbortController().signal, context: {} };
   await assert.rejects(runModel({ ...args, fetcher: async () => new Response('private upstream detail', { status: 500 }) }), e => e.status === 502 && !e.message.includes('private'));
   await assert.rejects(runModel({ ...args, fetcher: async () => new Response('data: {"type":"response.output_text.delta","delta":"partial"}\n\n') }), /回复可能不完整/);
 });

@@ -82,7 +82,7 @@ export class WorkspaceStore {
   meta(key, fallback = '') { return this.rows('SELECT value FROM workspace_meta WHERE key = ?', key)[0]?.value ?? fallback; }
   setMeta(key, value) { this.sql.exec('INSERT INTO workspace_meta(key, value) VALUES(?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value', key, String(value)); }
   isPaused() { return this.meta('heartbeat_paused') === 'true'; }
-  configured() { return Boolean(this.env.MOMOAI_API_KEY && /^[a-f0-9]{64}$/.test(this.env.WORKSPACE_LOGIN_HASH || '')); }
+  configured() { return Boolean((this.env.CHAT_PROVIDER === 'momoai' ? this.env.MOMOAI_API_KEY : this.env.AI?.run) && /^[a-f0-9]{64}$/.test(this.env.WORKSPACE_LOGIN_HASH || '')); }
   async authenticate(request) {
     const token = cookieValue(request, this.env.LOCAL_DEV === 'true');
     if (!/^[a-f0-9]{64}$/.test(token)) return false;

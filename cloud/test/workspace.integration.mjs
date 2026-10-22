@@ -13,7 +13,7 @@ test('private workspace: auth, CSRF, CRUD, real SSE transport, tool loop, persis
   const options = () => convertV4MiniflareOptions({
     name: 'dreamly-private-test', modules: true, scriptPath: 'dist/worker.js', compatibilityDate: '2026-10-01', resourcePersistencePath: persistence,
     durableObjects: { HEARTBEAT: { className: 'CloudHeartbeat', useSQLite: true } },
-    bindings: { HEARTBEAT_ENABLED: 'false', MOMOAI_API_KEY: 'integration-secret-must-not-leak', WORKSPACE_LOGIN_HASH: createHash('sha256').update(password).digest('hex'), DAILY_CHAT_LIMIT: '3' },
+    bindings: { HEARTBEAT_ENABLED: 'false', CHAT_PROVIDER: 'momoai', MOMOAI_API_KEY: 'integration-secret-must-not-leak', WORKSPACE_LOGIN_HASH: createHash('sha256').update(password).digest('hex'), DAILY_CHAT_LIMIT: '3' },
     outboundService: async request => {
       if (new URL(request.url).hostname === 'www.momoai.pro') {
         modelCalls++; const body = await request.json();
