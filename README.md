@@ -13,7 +13,7 @@ A small, AI-assisted experiment in improving a task-scheduling policy under a fi
 | Public source and feedback | This repository and issue #1 |
 | Scheduled cloud experiments | One verified successful GitHub Actions run; scheduled every 6 hours |
 | Model proposal | One successful Qwen CPU proposal, evaluated and saved |
-| One-second heartbeat | Local/server runner tested; [cloud runtime](cloud/README.md) prepared but not deployed |
+| One-second heartbeat | [Cloud runtime](cloud/README.md) deployed to Workers Free; inspect [live evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) and [independent observations](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml) for verified timing |
 | General or real-world improvement | Not established |
 
 The [first verified cloud run](https://github.com/air158/seed-agent-lab/actions/runs/39817612386) increased fixed synthetic training value from **686.10 to 699.65 (+1.97%)**. This is one toy-benchmark result, not proof of sustained improvement or an advantage over random search. See [REPORT.md](REPORT.md) for the current checkpoint.
@@ -41,7 +41,7 @@ Each simulated task has value, arrival time, a deadline and effort. A policy ran
 
 ## One-second heartbeat
 
-The [cloud runtime and independent observer](cloud/README.md) are prepared for a single free Cloudflare Durable Object. Deployment is pending authentication; no continuous cloud uptime is claimed yet.
+The [cloud runtime](cloud/README.md) is deployed as one Cloudflare Durable Object on the verified $0 Workers Free plan. It persists real one-second timer executions, keeps the latest 120 timestamps, and checks the owner's stop switch every minute. [Live execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) reports stale beats and platform interruptions honestly. An [independent hourly observer](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml) measures 90 seconds without polling. Deployment is complete; sustained and post-chat operation must be judged from those measurements.
 
 The optional live runner writes a real process-liveness checkpoint every second while it is running:
 
@@ -61,7 +61,7 @@ python3 -m seedlab.live --model
 
 Read `work/heartbeat.json` for the latest timestamp, sequence, process state and task state. This file is local and ignored by Git; it is not committed every second. If the timestamp stops advancing, the heartbeat is stale. `running` is a last observation, not a promise that the process is still alive.
 
-Stop with Ctrl+C, SIGTERM, or `enabled=false` in `control.json`. The live runner terminates its task process group and writes a stopped state. It does not restart itself. For persistent cloud operation, an owner-controlled host is still required. **No always-on cloud host has been configured for this runner.** GitHub Actions remains a scheduled development/testing workflow, not a keep-alive daemon.
+Stop the local runner with Ctrl+C, SIGTERM, or `enabled=false` in `control.json`. It terminates its task process group and writes a stopped state. The separately deployed cloud runtime stops at its next control check when `cloud_heartbeat_enabled=false` or `enabled=false`. GitHub Actions runs bounded experiments and independent observations; Cloudflare runs the continuous heartbeat.
 
 ## Runtime limits
 

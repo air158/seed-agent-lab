@@ -1,6 +1,6 @@
 # Continuous cloud heartbeat
 
-**Deployment status: prepared, not deployed.** Cloudflare authentication is currently unavailable. No public heartbeat URL or post-chat uptime result is claimed.
+**Deployed to Cloudflare Workers Free on October 22, 2026 (UTC).** [Public status](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev) · [Raw execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) · [Independent observations](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml). Deployment alone does not prove sustained operation; inspect the live timestamps and observation results. Post-chat continuity is established only by an observation completed after the chat ends.
 
 This is the continuously running supervisor for Seed Agent Lab. It records a real timer execution every second and observes the owner's stop switch and latest experiment generation. Bounded Qwen experiments remain in GitHub Actions every six hours; a heartbeat is not an LLM call.
 
@@ -22,7 +22,7 @@ For this single instance, planned usage is approximately:
 | Active memory duration | About 10,800–11,060 GB-seconds |
 | Retained state | One row with the latest 120 tick timestamps |
 
-These are planning estimates, not measured cloud usage. The allowance is shared with other workloads in the account. Deployment and cloud usage must be checked on the actual Free account. Do not create additional instances or rotate accounts to evade quotas. Do not use a temporary preview account for continuous operation: unclaimed previews expire after 60 minutes.
+These are planning estimates, not measured cloud usage. The deployed account's Workers Free plan was verified in the dashboard; no paid upgrade was made. The allowance is shared with other workloads in the account. Do not create additional instances or rotate accounts to evade quotas. Do not use a temporary preview account for continuous operation: unclaimed previews expire after 60 minutes.
 
 ## Deploy
 
@@ -45,12 +45,12 @@ Set `cloud_heartbeat_enabled` to `false` in the repository's `control.json` to p
 After deployment, run:
 
 ```sh
-python cloud/verify.py https://YOUR-WORKER.workers.dev --output heartbeat-verification.json
+python cloud/verify.py https://seed-agent-lab-heartbeat.johnmeng117.workers.dev --output heartbeat-verification.json
 ```
 
 The observer reads once, sends **zero requests for 90 seconds**, then reads again. It verifies the persisted count and individual timestamps, a one-second p95 interval, no gap over three seconds, and a consistent runtime boot. This tests independence from polling; it does not claim future uptime.
 
-Set the repository variable `CLOUD_HEARTBEAT_URL` to the verified origin. The `Cloud heartbeat observation` GitHub workflow then performs independent hourly observations and retains timestamped results for seven days. It observes the service; it never starts it or sends keep-alive requests during the observation interval. A successful run that finishes after the chat ends is the required post-chat evidence. Until that run exists, post-chat continuity remains unverified.
+The repository variable `CLOUD_HEARTBEAT_URL` is configured with the deployed origin. The `Cloud heartbeat observation` GitHub workflow performs independent hourly observations and retains timestamped results for seven days. It observes the service; it never starts it or sends keep-alive requests during the observation interval. A successful run that finishes after the chat ends is the required post-chat evidence. Until that run exists, post-chat continuity remains unverified.
 
 ## References
 

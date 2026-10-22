@@ -40,7 +40,10 @@ def observe(url: str, quiet_seconds: int = 90) -> dict:
     endpoint = url.rstrip("/") + "/evidence"
 
     def read():
-        req = Request(endpoint, headers={"Accept": "application/json", "Cache-Control": "no-cache"})
+        req = Request(endpoint, headers={
+            "Accept": "application/json", "Cache-Control": "no-cache",
+            "User-Agent": "SeedAgentLabMonitor/1.0 (+https://github.com/air158/seed-agent-lab)",
+        })
         with urlopen(req, timeout=15) as response:
             if response.status != 200:
                 raise RuntimeError(f"HTTP {response.status}")
