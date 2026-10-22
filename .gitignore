@@ -8,3 +8,8 @@ cloud/node_modules/
 cloud/dist/
 cloud/.wrangler/
 heartbeat-verification.json
+cloud/web/dist/
+cloud/.dev.vars*
+cloud/.env*
+cloud/.private/
+cloud/.qa/

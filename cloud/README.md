@@ -1,6 +1,18 @@
-# Continuous cloud heartbeat
+# Dreamly private chat and cloud heartbeat
 
-**Deployed to Cloudflare Workers Free on October 22, 2026 (UTC).** [Public status](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev) · [Raw execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) · [Independent observations](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml). Deployment alone does not prove sustained operation; inspect the live timestamps and observation results. Post-chat continuity is established only by an observation completed after the chat ends.
+The root URL serves a ChatGPT-style private workspace: streaming MomoAI chat, saved conversations, search, Markdown, image/text attachments, regeneration, stop, Markdown export, answer preferences, task reminders, and live Agent status. Model tools can read status/reports and add or complete reminders. They cannot run arbitrary commands, browse arbitrary URLs, or execute tasks in the background.
+
+The workspace fails closed until `MOMOAI_API_KEY` and `WORKSPACE_LOGIN_HASH` are configured as **Worker runtime secrets**. The latter is the SHA-256 digest of a high-entropy, randomly generated access code. Do not use an ordinary short password with this scheme. Do not commit either secret or the access code, and never put the model key in Vite/browser variables. Local `.dev.vars`, `.private`, `.qa`, and build outputs are ignored.
+
+Conversations, attachments, tasks, and hashed session tokens are stored in the existing SQLite Durable Object, separately from heartbeat data. Private APIs require authentication; mutations enforce same-origin JSON requests. Cookies are Secure, HttpOnly, SameSite=Strict, and expire after seven days. No public route returns conversations or credentials. Browser assets use a restrictive CSP and do not automatically fetch external Markdown images.
+
+Chat context and its attachments are sent over HTTPS to MomoAI. `store: false` is requested, but this application cannot verify the provider's retention practices. Cloudflare hosts the service and storage; this is not end-to-end encrypted storage. Deleting a conversation removes its workspace messages/attachments, not provider copies or platform backups. Current limits are 200 chats, 60 turns per chat, 200 reminders, and 50 model requests/day (UTC+8). A tool-assisted answer can consume multiple requests. Request limits and timeouts are not a monetary spending cap, and gateway overrides can affect token limits. Chat uses the owner's paid MomoAI service, independently of the bounded experimental model runs.
+
+The existing Git-connected Cloudflare build uses `cloud` as root, `npm run build`, and `npx wrangler deploy`. Runtime secrets must be added under Worker Settings → Variables and Secrets, not build environment variables. Changing `WORKSPACE_LOGIN_HASH` does not invalidate existing seven-day sessions; revoke them separately when rotating a compromised access code.
+
+## Existing heartbeat
+
+**Heartbeat deployed to Cloudflare Workers Free on October 22, 2026 (UTC).** [Workspace](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev) · [Raw execution evidence](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/evidence) · [Independent observations](https://github.com/air158/seed-agent-lab/actions/workflows/heartbeat-check.yml). Deployment alone does not prove sustained operation; inspect the live timestamps and observation results. Post-chat continuity is established only by an observation completed after the chat ends.
 
 This is the continuously running supervisor for Seed Agent Lab. It records a real timer execution every second and observes the owner's stop switch and latest experiment generation. Bounded Qwen experiments remain in GitHub Actions every six hours; a heartbeat is not an LLM call.
 
@@ -36,7 +48,7 @@ npx wrangler whoami
 npm run deploy
 ```
 
-Authentication and a verified Free account are required before deployment. No card, paid plan, inference API key, or public mutation endpoint is required by this implementation. The first minute cron reads the repository control document and starts the alarm. Cron changes can take time to propagate.
+Authentication and a verified Free account are required before deployment. The heartbeat itself needs no card, paid upgrade, or inference key; private chat additionally needs the runtime secrets described above. The first minute cron reads the repository control document and starts the alarm. Cron changes can take time to propagate.
 
 Set `cloud_heartbeat_enabled` to `false` in the repository's `control.json` to pause only the cloud heartbeat, or set its existing `enabled` field to `false` to pause the project. The next control check stops it. For an immediate deployment-level stop, set `HEARTBEAT_ENABLED` to `false` and deploy, or disable/delete the Worker in Cloudflare. A missing valid owner-control response for three minutes also stops the heartbeat.
 

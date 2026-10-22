@@ -4,13 +4,24 @@
   "type": "module",
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "test:runtime": "node --test test/runtime.integration.mjs",
-    "build": "wrangler deploy --dry-run --outdir dist",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "test:runtime": "node --test test/runtime.integration.mjs test/workspace.integration.mjs",
+    "build": "npm run build:web && wrangler deploy --dry-run --outdir dist",
+    "dev": "npm run build:web && wrangler dev --ip 127.0.0.1",
+    "deploy": "npm run build:web && wrangler deploy",
+    "build:web": "vite build",
+    "dev:web": "vite"
   },
   "devDependencies": {
-    "wrangler": "4.152.0",
-    "miniflare": "5.20261019.2-beta"
+    "@vitejs/plugin-react": "^6.1.2",
+    "miniflare": "5.20261019.2-beta",
+    "vite": "^8.3.5",
+    "wrangler": "4.152.0"
+  },
+  "dependencies": {
+    "lucide-react": "^1.61.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   }
 }
