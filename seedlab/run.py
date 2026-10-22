@@ -101,7 +101,7 @@ def model_candidate(parent: Policy, generation: int, timeout: int) -> tuple[Poli
         env = {k: os.environ[k] for k in allowed if k in os.environ}
         env.update(HF_HOME=str(ROOT / ".cache" / "huggingface"), HF_HUB_DISABLE_TELEMETRY="1",
                    HF_HUB_DISABLE_IMPLICIT_TOKEN="1", TOKENIZERS_PARALLELISM="false",
-                   PYTHONPATH=str(ROOT), HOME=str(work), OMP_NUM_THREADS="2")
+                   PYTHONPATH=str(ROOT), OMP_NUM_THREADS="2")
         if os.environ.get("SEED_MODEL_REVISION"):
             env["SEED_MODEL_REVISION"] = os.environ["SEED_MODEL_REVISION"]
         try:
@@ -125,25 +125,25 @@ def write_report(root: Path, state: dict) -> None:
     recent = history[-1] if history else None
     baseline = evaluate(Policy(), list(range(100, 120)))["value"]
     champion = evaluate(Policy.parse(state["policy"]), list(range(100, 120)))["value"]
-    lines = ["# Seed Agent Lab", "", "> 自动实验记录。分数来自合成任务队列，不代表现实收益或通用智能。", "",
-             f"状态：**{state['status']}** · 已完成 **{state['generation']}** 轮 · 采纳 **{state['total_promotions']}** 次改进", "",
-             "| 指标 | 当前结果 |", "|---|---|",
-             f"| 固定训练集任务价值 | {champion:.2f} |", f"| 初始策略基线 | {baseline:.2f} |",
-             f"| 相对基线变化 | {(champion / baseline - 1) * 100:+.2f}% |",
-             f"| 开放模型成功提案次数 | {state['total_model_successes']} |",
-             f"| 今日执行轮数 | {state['cycles_today']} / 4 |",
-             f"| 今日模型调用尝试 | {state['model_calls_today']} / 2 |", "",
-             "每轮最多 3 个候选。候选是隔离的数据策略，继承父策略；不会创建服务器、账户或新的调度器。", ""]
+    lines = ["# Seed Agent Lab", "", "> Automated experiment record. Scores measure synthetic task queues, not real-world value or general intelligence.", "",
+             f"Status: **{state['status']}** · Completed **{state['generation']}** cycles · Accepted **{state['total_promotions']}** improvements", "",
+             "| Metric | Current result |", "|---|---|",
+             f"| Fixed training-set task value | {champion:.2f} |", f"| Initial policy baseline | {baseline:.2f} |",
+             f"| Change from baseline | {(champion / baseline - 1) * 100:+.2f}% |",
+             f"| Successful open-model proposals | {state['total_model_successes']} |",
+             f"| Cycles today | {state['cycles_today']} / 4 |",
+             f"| Model attempts today | {state['model_calls_today']} / 2 |", "",
+             "At most 3 candidates per cycle. Candidates are parameter data, not new servers, accounts or schedulers.", ""]
     if recent:
-        lines += [f"最近实验：{recent['time']} · {recent['environment']}", "",
-                  f"模型状态：`{recent['model']['status']}`", "",
-                  "| 候选 | 来源 | 训练分数 | 独立评估分数 | 采纳 |", "|---|---|---:|---:|---|"]
+        lines += [f"Latest experiment: {recent['time']} · {recent['environment']}", "",
+                  f"Model status: `{recent['model']['status']}`", "",
+                  "| Candidate | Origin | Training score | Evaluation score | Accepted |", "|---|---|---:|---:|---|"]
         for child in recent["evaluation"]["candidates"]:
             picked = child["id"] == recent.get("winner_id")
-            lines.append(f"| {child['id']} | {child['origin']} | {child['train']['value']:.2f} | {child['holdout']['value']:.2f} | {'是' if picked else '否'} |")
-        lines += ["", "独立评估集按轮次更换，跨轮分数不可直接比较；训练集固定，供趋势比较。", ""]
-    lines += ["暂停：把 `control.json` 的 `enabled` 改为 `false`，或在 Actions 中 Disable workflow。",
-              "停止后不会自行恢复；恢复运行需要项目所有者操作。", ""]
+            lines.append(f"| {child['id']} | {child['origin']} | {child['train']['value']:.2f} | {child['holdout']['value']:.2f} | {'yes' if picked else 'no'} |")
+        lines += ["", "The evaluation set rotates each generation and participates in selection. It is not an untouched final test set; do not compare its scores across generations. The training set is fixed.", ""]
+    lines += ["Pause: set `enabled` to `false` in `control.json`, or disable the Actions workflow.",
+              "The experiment will not re-enable itself; resuming requires the project owner.", ""]
     (root / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
 
 
