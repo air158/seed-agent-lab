@@ -28,7 +28,11 @@ The corrected version schedules each next batch at its deadline in advance, inst
 
 ## After the chat
 
-Hourly independent GitHub observations are enabled, and a separate follow-up is scheduled to verify operation after the chat ends. **Post-chat continuity is pending until that later evidence exists.**
+**Post-chat operation verified.** A new [independent GitHub run](https://github.com/air158/seed-agent-lab/actions/runs/39830483552), created at 18:20:40 UTC after the 18:17:13 UTC handoff, observed the deployed service from 18:20:49 to 18:22:20 UTC on October 22, 2026.
+
+The counter advanced from 1,571 at handoff to 1,877: 306 executed beats across 306.006 seconds of heartbeat timestamps. The independent 90-second quiet interval contained 90 individually verified beats, with a 1,000 ms p95 and 1,001 ms maximum interval. The runtime boot identifier was unchanged, health passed before and after, and no new long gaps occurred. Earlier historical gaps remain recorded.
+
+See the [post-chat validation](post-chat-2026-10-22.json) and [original observation](post-chat-observation.json). The one-time follow-up is now paused after successful verification. The cloud heartbeat and hourly independent GitHub observations remain enabled.
 
 The one-second heartbeat is a persisted runtime check. Model experiments remain bounded and run separately every six hours.
 
