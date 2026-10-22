@@ -4,6 +4,5 @@
   "max_cycles_per_day": 4,
   "max_model_calls_per_day": 2,
   "model_timeout_seconds": 180,
-  "minimum_cycle_interval_seconds": 1800,
-  "cloud_heartbeat_enabled": false
+  "minimum_cycle_interval_seconds": 1800
 }
