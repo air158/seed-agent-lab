@@ -1,0 +1,86 @@
+name: Seed Lab evolution
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'seedlab/**'
+      - 'tests/**'
+      - 'control.json'
+      - 'requirements-model.txt'
+      - '.github/workflows/evolve.yml'
+
+concurrency:
+  group: seed-lab-evolution
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  experiment:
+    # Standard Linux runners are free for PUBLIC repositories. Never run this on paid/private runners.
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      HF_HUB_DISABLE_IMPLICIT_TOKEN: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test lifecycle and policy boundaries
+        run: python -m unittest discover -s tests -v
+      - name: Check stop switch and remaining budget
+        id: plan
+        run: |
+          python - <<'PY'
+          import os, time
+          from datetime import datetime, timezone
+          from seedlab.run import ROOT, load_state, read_control
+          control = read_control(ROOT)
+          state, recovered = load_state(ROOT / 'state')
+          today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+          same_day = state['day'] == today
+          runnable = control['enabled'] and (not same_day or state['cycles_today'] < control['max_cycles_per_day']) and time.time() - state['last_cycle_epoch'] >= control['minimum_cycle_interval_seconds']
+          model = runnable and not recovered and (not same_day or state['model_calls_today'] < control['max_model_calls_per_day'])
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write('run=' + str(runnable or recovered).lower() + '\n')
+              f.write('model=' + str(model).lower() + '\n')
+          PY
+      - name: Install free CPU model runtime
+        if: steps.plan.outputs.model == 'true'
+        continue-on-error: true
+        timeout-minutes: 4
+        run: |
+          python -m pip install --disable-pip-version-check torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --disable-pip-version-check -r requirements-model.txt
+      - name: Run one bounded improvement experiment
+        if: steps.plan.outputs.run == 'true'
+        env:
+          USE_MODEL: ${{ steps.plan.outputs.model }}
+        run: |
+          if [ "$USE_MODEL" = 'true' ]; then
+            python -m seedlab.run --model
+          else
+            python -m seedlab.run
+          fi
+      - name: Save experiment checkpoint
+        if: always() && steps.plan.outputs.run == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m seedlab.publish
+      - name: Publish readable run summary
+        if: always()
+        run: |
+          if [ -f REPORT.md ]; then
+            cat REPORT.md >> "$GITHUB_STEP_SUMMARY"
+          fi

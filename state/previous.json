@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "generation": 0,
+  "policy": {
+    "value_weight": 1.0,
+    "urgency_weight": 0.0,
+    "age_weight": 0.0,
+    "effort_power": 0.0
+  },
+  "status": "ready",
+  "day": "",
+  "cycles_today": 0,
+  "model_calls_today": 0,
+  "last_cycle_epoch": 0,
+  "history": [],
+  "lineage": [],
+  "total_model_successes": 0,
+  "total_promotions": 0
+}
