@@ -6,6 +6,8 @@ A small, AI-assisted experiment in improving a task-scheduling policy under a fi
 
 **The task is a simulation.** Candidates are four numeric scheduling parameters, not independent agents or servers. The project cannot create accounts, acquire hosting, copy itself elsewhere, or edit its runner and tests.
 
+**Private web chat:** [Open Dreamly](https://seed-agent-lab-heartbeat.johnmeng117.workers.dev/) uses the account's free Workers AI allocation, with access-code login, saved conversations, image/text attachments, task reminders, and Agent status tools. No paid fallback is enabled. See the [deployment verification](verification/dreamly-chat-2026-10-23.md) and [configuration/privacy notes](cloud/README.md).
+
 ## Current status
 
 | Capability | Evidence |
