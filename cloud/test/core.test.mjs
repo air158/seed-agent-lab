@@ -39,6 +39,16 @@ test('alarm executes and persists individual one-second ticks across batches', a
   assert.equal(f.alarm(), 107000);
 });
 
+test('next batch is armed at its deadline before any ticks, without a late reschedule', async () => {
+  const scheduled = [];
+  const f = fixture({ setAlarm: at => { scheduled.push(at); } });
+  await f.runtime.reconcile();
+  scheduled.length = 0;
+  await f.runtime.alarm();
+  assert.deepEqual(scheduled, [104000]);
+  assert.equal(f.stored().next_tick_ms, 104000);
+});
+
 test('owner pause cancels pending alarms and prevents all later ticks', async () => {
   const f = fixture();
   await f.runtime.reconcile();

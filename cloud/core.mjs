@@ -106,9 +106,11 @@ export class HeartbeatRuntime {
     try {
       this.batchStartedAt = this.now();
       const end = this.now() + this.batchMs;
-      // This durable alarm remains scheduled if a host restart interrupts a
-      // batch. The minute cron is an additional recovery and owner-control check.
-      await this.setAlarm(end + 5000);
+      // Schedule the next batch well in advance. Moving a later alarm forward
+      // only one second before the desired deadline caused six-second gaps in
+      // the deployed runtime. The new batch waits for next_tick_ms if needed.
+      // This alarm also remains scheduled if a restart interrupts this batch.
+      await this.setAlarm(end);
       let next = Math.max(this.state.next_tick_ms || this.now(), this.now());
       while (next < end && this.state.enabled) {
         await this.sleep(Math.max(0, next - this.now()));
@@ -132,7 +134,6 @@ export class HeartbeatRuntime {
         // Do not catch up by fabricating or bursting missed heartbeats.
         next = this.state.next_tick_ms;
       }
-      if (this.state.enabled) await this.setAlarm(this.state.next_tick_ms || this.now() + INTERVAL_MS);
       this.batchFinishedAt = this.now();
     } finally {
       this.running = false;
