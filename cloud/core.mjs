@@ -30,6 +30,7 @@ export class HeartbeatRuntime {
     await this.ready;
     const age = this.state.last_tick_ms === null ? null : Math.max(0, this.now() - this.state.last_tick_ms);
     return { ...structuredClone(this.state), interval_ms: INTERVAL_MS,
+      runtime_revision: 'prearmed-batch-v2',
       runtime_diagnostics: {
         alarm_active: this.running,
         batch_started_at_ms: this.batchStartedAt ?? null,
