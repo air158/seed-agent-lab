@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generation": 4,
+  "generation": 5,
   "policy": {
     "value_weight": 0.5,
     "urgency_weight": 0.3,
@@ -9,9 +9,9 @@
   },
   "status": "healthy_without_llm",
   "day": "2026-10-23",
-  "cycles_today": 0,
-  "model_calls_today": 0,
-  "last_cycle_epoch": 1792704758.2171407,
+  "cycles_today": 1,
+  "model_calls_today": 1,
+  "last_cycle_epoch": 1792718482.3700175,
   "history": [
     {
       "generation": 1,
@@ -408,6 +408,95 @@
         "benchmark": "synthetic-task-scheduling-v1"
       },
       "winner_id": "6612ef08ed3b"
+    },
+    {
+      "generation": 5,
+      "time": "2026-10-23T01:21:22.370018+00:00",
+      "model": {
+        "status": "unavailable",
+        "detail": "ValueError: model_quality: unchanged_policy"
+      },
+      "environment": "github-actions",
+      "evaluation": {
+        "parent_train": {
+          "value": 699.85,
+          "completed": 55.7,
+          "budget_used": 167.4
+        },
+        "parent_holdout": {
+          "value": 684.45,
+          "completed": 55.5,
+          "budget_used": 170.7
+        },
+        "candidates": [
+          {
+            "id": "90f7265b5525",
+            "policy": {
+              "value_weight": 0.0,
+              "urgency_weight": 0.3,
+              "age_weight": 0.4512,
+              "effort_power": 0.4
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 635.6,
+              "completed": 60.5,
+              "budget_used": 179.3
+            },
+            "holdout": {
+              "value": 610.15,
+              "completed": 59.3,
+              "budget_used": 179.2
+            },
+            "accepted": false
+          },
+          {
+            "id": "062840d40da0",
+            "policy": {
+              "value_weight": 0.5,
+              "urgency_weight": 0.8173,
+              "age_weight": 0.4512,
+              "effort_power": 0.4
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 700.8,
+              "completed": 57.75,
+              "budget_used": 172.85
+            },
+            "holdout": {
+              "value": 683.1,
+              "completed": 57.3,
+              "budget_used": 175.4
+            },
+            "accepted": false
+          },
+          {
+            "id": "c4728acf6437",
+            "policy": {
+              "value_weight": 0.5,
+              "urgency_weight": 0.3,
+              "age_weight": 0.0,
+              "effort_power": 0.4
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 699.4,
+              "completed": 55.6,
+              "budget_used": 167.25
+            },
+            "holdout": {
+              "value": 682.7,
+              "completed": 55.5,
+              "budget_used": 170.25
+            },
+            "accepted": false
+          }
+        ],
+        "winner": null,
+        "benchmark": "synthetic-task-scheduling-v1"
+      },
+      "winner_id": null
     }
   ],
   "lineage": [
