@@ -29,7 +29,7 @@ def propose(parent: Policy, generation: int) -> dict:
             "Tasks have value, arrival, deadline and effort. Hourly budget is 8; tasks expire. "
             "Task priority = (value_weight * value + urgency_weight * 10 / hours_until_deadline "
             "+ age_weight * age_in_hours / 8) / effort**effort_power. "
-            "Maximize total completed value. Suggest one improvement to: " + json.dumps(asdict(parent)) +
+            "Maximize total completed value. Change at least one parameter; do not repeat this policy: " + json.dumps(asdict(parent)) +
             '. Fields value_weight, urgency_weight, age_weight must be 0..8; effort_power must be 0..2. '
             'Return exactly {"value_weight":number,"urgency_weight":number,"age_weight":number,"effort_power":number}.'
         )},
@@ -41,6 +41,10 @@ def propose(parent: Policy, generation: int) -> dict:
                                 top_p=0.9, pad_token_id=tokenizer.eos_token_id)
     response = tokenizer.decode(output[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
     policy = parse_model_output(response)
+    # A valid JSON echo is not a new candidate. Do not retry or fabricate a mutation.
+    # The runner preserves the final error line and charges this model attempt.
+    if policy == parent:
+        raise ValueError("model_quality: unchanged_policy")
     return {"policy": asdict(policy), "model": MODEL_ID,
             "revision": getattr(model.config, "_commit_hash", revision)}
 
