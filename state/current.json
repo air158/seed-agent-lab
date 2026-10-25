@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "generation": 13,
+  "generation": 14,
   "policy": {
     "value_weight": 0.3682,
     "urgency_weight": 0.3,
     "age_weight": 1.1696,
-    "effort_power": 0.218
+    "effort_power": 0.0
   },
   "status": "healthy_without_llm",
   "day": "2026-10-25",
-  "cycles_today": 1,
-  "model_calls_today": 1,
-  "last_cycle_epoch": 1792903013.659122,
+  "cycles_today": 2,
+  "model_calls_today": 2,
+  "last_cycle_epoch": 1792927248.6295154,
   "history": [
     {
       "generation": 1,
@@ -1266,6 +1266,115 @@
         "benchmark": "synthetic-task-scheduling-v1"
       },
       "winner_id": null
+    },
+    {
+      "generation": 14,
+      "time": "2026-10-25T11:20:48.629515+00:00",
+      "model": {
+        "status": "unavailable",
+        "detail": "ValueError: model_quality: unchanged_policy"
+      },
+      "environment": "github-actions",
+      "evaluation": {
+        "parent_train": {
+          "value": 712.25,
+          "completed": 56.1,
+          "budget_used": 173.2
+        },
+        "parent_holdout": {
+          "value": 701.2,
+          "completed": 57.7,
+          "budget_used": 174.6
+        },
+        "candidates": [
+          {
+            "id": "c2628e896272",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.3,
+              "age_weight": 1.1696,
+              "effort_power": 0.5559
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 696.1,
+              "completed": 56.55,
+              "budget_used": 167.15
+            },
+            "holdout": {
+              "value": 688.6,
+              "completed": 58.7,
+              "budget_used": 170.6
+            },
+            "accepted": false
+          },
+          {
+            "id": "26ff34e90986",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.3,
+              "age_weight": 1.1696,
+              "effort_power": 0.0
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 713.25,
+              "completed": 55.15,
+              "budget_used": 175.0
+            },
+            "holdout": {
+              "value": 703.75,
+              "completed": 57.3,
+              "budget_used": 177.1
+            },
+            "accepted": true
+          },
+          {
+            "id": "86e4f447c11e",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.0,
+              "age_weight": 1.1696,
+              "effort_power": 0.218
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 684.0,
+              "completed": 53.85,
+              "budget_used": 164.65
+            },
+            "holdout": {
+              "value": 677.5,
+              "completed": 55.75,
+              "budget_used": 167.35
+            },
+            "accepted": false
+          }
+        ],
+        "winner": {
+          "id": "26ff34e90986",
+          "policy": {
+            "value_weight": 0.3682,
+            "urgency_weight": 0.3,
+            "age_weight": 1.1696,
+            "effort_power": 0.0
+          },
+          "origin": "bounded-mutation",
+          "train": {
+            "value": 713.25,
+            "completed": 55.15,
+            "budget_used": 175.0
+          },
+          "holdout": {
+            "value": 703.75,
+            "completed": 57.3,
+            "budget_used": 177.1
+          },
+          "accepted": true
+        },
+        "benchmark": "synthetic-task-scheduling-v1"
+      },
+      "winner_id": "26ff34e90986"
     }
   ],
   "lineage": [
@@ -1298,8 +1407,14 @@
       "parent": "5f6b73b02fc8",
       "child": "a5999876f43f",
       "origin": "bounded-mutation"
+    },
+    {
+      "generation": 14,
+      "parent": "a5999876f43f",
+      "child": "26ff34e90986",
+      "origin": "bounded-mutation"
     }
   ],
   "total_model_successes": 3,
-  "total_promotions": 5
+  "total_promotions": 6
 }
