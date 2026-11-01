@@ -1,17 +1,17 @@
 {
   "version": 1,
-  "generation": 36,
+  "generation": 37,
   "policy": {
     "value_weight": 0.3682,
     "urgency_weight": 0.3,
     "age_weight": 1.8509,
     "effort_power": 0.0
   },
-  "status": "healthy",
+  "status": "healthy_without_llm",
   "day": "2026-11-01",
-  "cycles_today": 1,
-  "model_calls_today": 1,
-  "last_cycle_epoch": 1793512663.307912,
+  "cycles_today": 2,
+  "model_calls_today": 2,
+  "last_cycle_epoch": 1793538980.4830642,
   "history": [
     {
       "generation": 1,
@@ -3359,6 +3359,95 @@
               "value": 714.35,
               "completed": 55.7,
               "budget_used": 177.4
+            },
+            "accepted": false
+          }
+        ],
+        "winner": null,
+        "benchmark": "synthetic-task-scheduling-v1"
+      },
+      "winner_id": null
+    },
+    {
+      "generation": 37,
+      "time": "2026-11-01T13:16:20.483064+00:00",
+      "model": {
+        "status": "unavailable",
+        "detail": "ValueError: model_quality: unchanged_policy"
+      },
+      "environment": "github-actions",
+      "evaluation": {
+        "parent_train": {
+          "value": 715.7,
+          "completed": 55.5,
+          "budget_used": 176.55
+        },
+        "parent_holdout": {
+          "value": 719.8,
+          "completed": 56.2,
+          "budget_used": 175.3
+        },
+        "candidates": [
+          {
+            "id": "667d318e3040",
+            "policy": {
+              "value_weight": 1.1209,
+              "urgency_weight": 0.3,
+              "age_weight": 1.8509,
+              "effort_power": 0.0
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 697.55,
+              "completed": 54.15,
+              "budget_used": 169.5
+            },
+            "holdout": {
+              "value": 703.1,
+              "completed": 55.15,
+              "budget_used": 169.0
+            },
+            "accepted": false
+          },
+          {
+            "id": "ba86a5a64eba",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.3,
+              "age_weight": 1.8509,
+              "effort_power": 0.0
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 715.7,
+              "completed": 55.5,
+              "budget_used": 176.55
+            },
+            "holdout": {
+              "value": 719.8,
+              "completed": 56.2,
+              "budget_used": 175.3
+            },
+            "accepted": false
+          },
+          {
+            "id": "097280cd8e5a",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.3,
+              "age_weight": 1.8509,
+              "effort_power": 0.2323
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 712.55,
+              "completed": 56.4,
+              "budget_used": 173.0
+            },
+            "holdout": {
+              "value": 717.3,
+              "completed": 57.15,
+              "budget_used": 172.35
             },
             "accepted": false
           }
