@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generation": 75,
+  "generation": 76,
   "policy": {
     "value_weight": 0.3682,
     "urgency_weight": 0.3,
@@ -8,10 +8,10 @@
     "effort_power": 0.0
   },
   "status": "healthy",
-  "day": "2026-11-17",
-  "cycles_today": 1,
-  "model_calls_today": 1,
-  "last_cycle_epoch": 1794901839.6511142,
+  "day": "2026-11-18",
+  "cycles_today": 0,
+  "model_calls_today": 0,
+  "last_cycle_epoch": 1794948698.1320858,
   "history": [
     {
       "generation": 1,
@@ -6838,6 +6838,96 @@
         "benchmark": "synthetic-task-scheduling-v1"
       },
       "winner_id": null
+    },
+    {
+      "generation": 76,
+      "time": "2026-11-17T20:51:38.132086+00:00",
+      "model": {
+        "status": "ok",
+        "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+        "revision": "ea3f2471cf1b1f0db85067f1ef93848e38e88c25"
+      },
+      "environment": "github-actions",
+      "evaluation": {
+        "parent_train": {
+          "value": 715.7,
+          "completed": 55.5,
+          "budget_used": 176.55
+        },
+        "parent_holdout": {
+          "value": 717.4,
+          "completed": 56.35,
+          "budget_used": 179.45
+        },
+        "candidates": [
+          {
+            "id": "376ea748cfc5",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.0,
+              "age_weight": 1.8509,
+              "effort_power": 0.0
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 691.05,
+              "completed": 53.95,
+              "budget_used": 168.05
+            },
+            "holdout": {
+              "value": 699.4,
+              "completed": 54.75,
+              "budget_used": 170.75
+            },
+            "accepted": false
+          },
+          {
+            "id": "399af1c87b1a",
+            "policy": {
+              "value_weight": 0.3682,
+              "urgency_weight": 0.3,
+              "age_weight": 1.8509,
+              "effort_power": 0.1357
+            },
+            "origin": "bounded-mutation",
+            "train": {
+              "value": 713.25,
+              "completed": 56.0,
+              "budget_used": 174.55
+            },
+            "holdout": {
+              "value": 717.0,
+              "completed": 56.7,
+              "budget_used": 177.1
+            },
+            "accepted": false
+          },
+          {
+            "id": "e6d5cfe93ecf",
+            "policy": {
+              "value_weight": 0.4,
+              "urgency_weight": 0.2,
+              "age_weight": 0.5,
+              "effort_power": 0.3
+            },
+            "origin": "qwen-local-cpu",
+            "train": {
+              "value": 700.1,
+              "completed": 55.4,
+              "budget_used": 167.75
+            },
+            "holdout": {
+              "value": 700.55,
+              "completed": 55.55,
+              "budget_used": 168.9
+            },
+            "accepted": false
+          }
+        ],
+        "winner": null,
+        "benchmark": "synthetic-task-scheduling-v1"
+      },
+      "winner_id": null
     }
   ],
   "lineage": [
@@ -6890,6 +6980,6 @@
       "origin": "bounded-mutation"
     }
   ],
-  "total_model_successes": 13,
+  "total_model_successes": 14,
   "total_promotions": 8
 }
