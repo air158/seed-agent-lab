@@ -2,7 +2,7 @@
 
 > Automated experiment record. Scores measure synthetic task queues, not real-world value or general intelligence.
 
-Status: **healthy_without_llm** · Completed **80** cycles · Accepted **8** improvements
+Status: **healthy_without_llm** · Completed **81** cycles · Accepted **8** improvements
 
 | Metric | Current result |
 |---|---|
@@ -10,20 +10,20 @@ Status: **healthy_without_llm** · Completed **80** cycles · Accepted **8** imp
 | Initial policy baseline | 686.10 |
 | Change from baseline | +4.31% |
 | Successful open-model proposals | 14 |
-| Cycles today | 2 / 4 |
-| Model attempts today | 2 / 2 |
+| Cycles today | 1 / 4 |
+| Model attempts today | 1 / 2 |
 
 At most 3 candidates per cycle. Candidates are parameter data, not new servers, accounts or schedulers.
 
-Latest experiment: 2026-11-19T20:31:09.198070+00:00 · github-actions
+Latest experiment: 2026-11-20T07:07:54.105067+00:00 · github-actions
 
 Model status: `unavailable`
 
 | Candidate | Origin | Training score | Evaluation score | Accepted |
 |---|---|---:|---:|---|
-| e6a7cc16aefd | bounded-mutation | 713.25 | 705.25 | no |
-| 665c023f39cb | bounded-mutation | 686.50 | 676.40 | no |
-| 8a77da3fbb69 | bounded-mutation | 714.90 | 704.10 | no |
+| 45f94b5f7c5f | bounded-mutation | 699.45 | 684.25 | no |
+| b981f08d57ee | bounded-mutation | 702.65 | 687.60 | no |
+| f2f92e64fcbc | bounded-mutation | 682.25 | 663.50 | no |
 
 The evaluation set rotates each generation and participates in selection. It is not an untouched final test set; do not compare its scores across generations. The training set is fixed.
 
